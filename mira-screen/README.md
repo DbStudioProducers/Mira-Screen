@@ -94,7 +94,8 @@ docker-compose up -d
 - [x] Player de vídeo customizado com DRM
 - [x] Recomendações baseadas em ML (placeholder)
 - [x] Perfis de usuário
-- [x] Painel administrativo completo
+- [x] **Painel administrativo completo** com CRUD
+- [x] **Gestão de conteúdo** (adicionar, editar, excluir)
 - [x] Analytics em tempo real
 - [ ] Offline download (próxima sprint)
 - [ ] Social watch party
@@ -106,6 +107,27 @@ docker-compose up -d
 - [Player Architecture](./docs/player-architecture.md)
 - [Security & Compliance](./docs/security.md)
 - [Deployment Guide](./docs/deployment.md)
+
+## Deploy na Nuvem (Painel Administrativo)
+
+O painel de administração pode ser hospedado gratuitamente em:
+
+- **Vercel** (Recomendado) → Veja `admin/README.md`
+- **Netlify**
+
+## Compilação no Codemagic (Flutter)
+
+**Erro:** `Did not find xcodeproj`
+
+**Solução:**
+```bash
+cd client
+flutter create --platforms=ios,android .
+```
+
+Depois disso, envie para o Codemagic.
+
+---
 
 ## Próximos Passos
 
