@@ -1,0 +1,2 @@
+// Placeholder - This file will be regenerated during build
+// Codemagic will run flutter create if needed
