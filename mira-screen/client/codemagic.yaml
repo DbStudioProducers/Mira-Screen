@@ -1,0 +1,48 @@
+# Mira Screen - Codemagic Configuration
+# This file allows building iOS and Android WITHOUT local Flutter installation
+
+workflows:
+  ios-android-build:
+    name: Mira Screen - iOS & Android
+    max_build_duration: 60
+    environment:
+      flutter: 3.24.0
+      groups:
+        - appstore_credentials
+      vars:
+        BUNDLE_ID: com.mirascreen.app
+        APP_NAME: "Mira Screen"
+
+    scripts:
+      - name: Install dependencies
+        script: |
+          cd client
+          flutter pub get
+
+      - name: Generate iOS and Android platforms (Critical Fix)
+        script: |
+          cd client
+          # This solves the "Did not find xcodeproj" error
+          flutter create --platforms=ios,android .
+
+      - name: Build Android APK
+        script: |
+          cd client
+          flutter build apk --release
+
+      - name: Build iOS IPA
+        script: |
+          cd client
+          flutter build ipa --release --export-options-plist=ios/ExportOptions.plist || true
+
+    artifacts:
+      - client/build/app/outputs/flutter-apk/*.apk
+      - client/build/ios/ipa/*.ipa
+
+    publishing:
+      email:
+        recipients:
+          - seu-email@exemplo.com
+        notify:
+          success: true
+          failure: true

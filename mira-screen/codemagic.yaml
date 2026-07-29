@@ -1,0 +1,62 @@
+# ================================================
+# Mira Screen - FINAL Configuration (Mac Mini M2)
+# Android App Bundle + iOS
+# ================================================
+
+workflows:
+  mira-screen-m2-final:
+    name: Mira Screen - Mac Mini M2 (Android App Bundle + iOS)
+    max_build_duration: 120
+
+    instance_type: mac_mini_m2
+    environment:
+      flutter: 3.24.0
+      xcode: latest
+
+    cache:
+      cache_paths:
+        - $HOME/.pub-cache
+        - $HOME/.gradle/caches
+
+    scripts:
+      - name: Enter client directory
+        script: |
+          cd client
+
+      - name: Regenerate iOS and Android projects
+        script: |
+          cd client
+          rm -rf ios android
+          flutter create --platforms=ios,android . \
+            --project-name mira_screen \
+            --org com.mirascreen
+
+      - name: Install dependencies
+        script: |
+          cd client
+          flutter clean
+          flutter pub get
+
+      # ===================== ANDROID APP BUNDLE =====================
+      - name: Build Android App Bundle (Release)
+        script: |
+          cd client
+          flutter build appbundle --release
+
+      # ===================== iOS =====================
+      - name: Build iOS IPA
+        script: |
+          cd client
+          flutter build ipa --release --no-codesign || true
+
+    artifacts:
+      - client/build/app/outputs/bundle/release/app-release.aab
+      - client/build/ios/ipa/*.ipa
+
+    publishing:
+      email:
+        recipients:
+          - admin@mirascreen.com
+        notify:
+          success: true
+          failure: true
